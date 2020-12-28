@@ -1,0 +1,102 @@
+definitions:
+  login.Auth:
+    properties:
+      Password:
+        type: string
+      Username:
+        type: string
+    type: object
+  service.Service:
+    properties:
+      moduleID:
+        type: integer
+      releaseID:
+        type: integer
+      serviceName:
+        type: string
+      workspaceID:
+        type: integer
+    required:
+    - moduleID
+    - releaseID
+    - serviceName
+    - workspaceID
+    type: object
+info:
+  contact: {}
+paths:
+  /MySQLCheck:
+    get:
+      description: MySQL存活检测
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+        "500":
+          description: '{"code":500,"data":null,"msg":"内部错误"}'
+          schema:
+            type: string
+      summary: MySQL存活检测
+  /api/v1/login:
+    post:
+      consumes:
+      - application/json
+      description: 登录
+      parameters:
+      - description: 校验
+        in: body
+        name: auth
+        required: true
+        schema:
+          $ref: '#/definitions/login.Auth'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{"token": "token"},"msg":"ok"}'
+          schema:
+            type: string
+        "500":
+          description: '{"code":500,"data":null,"msg":"错误的TOKEN"}'
+          schema:
+            type: string
+      summary: 登录
+  /api/v1/service:
+    post:
+      consumes:
+      - application/json
+      description: 创建发布服务
+      parameters:
+      - description: 创建发布服务
+        in: body
+        name: service
+        required: true
+        schema:
+          $ref: '#/definitions/service.Service'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+        "500":
+          description: '{"code":400,"data":null,"msg":{"WorkspaceID": "WorkspaceID为必填字段"}}'
+          schema:
+            type: string
+      summary: 创建发布服务
+  /healthCheck:
+    get:
+      description: 服务存活检测
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code":200,"data":{},"msg":"ok"}'
+          schema:
+            type: string
+      summary: 服务存活检测
+swagger: "2.0"
